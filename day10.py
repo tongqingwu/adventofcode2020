@@ -13,36 +13,31 @@ def get_nums_from_file(f_name):
 
 
 def part2(nums):
-    p_cnt = 1
-    list_nums = []
-    list_nums.append(tuple(nums))
-    i = 0 
-    while i < (len(nums) - 1):  # nums has most len, so it is fine here
-        print('i is {}'.format(i))
-        print('New len of list_nums {}'.format(len(list_nums)))
-        for t in list_nums:
-            n = list(t) 
-#            print('Dealing with n: {}'.format(n))
-            if (i + 2) < len(n) and (n[i+2] - n[i]) < 4:
-                tmp_nums = n.copy()
-                tmp_nums.remove(n[i+1])
-                print('Adding {}'.format(tmp_nums))
-                list_nums.append(tuple(tmp_nums))
-                p_cnt += 1
-
-            if (i + 3) < len(n) and (n[i+3] - n[i]) < 4:
-                tmp_nums = n.copy()
-                tmp_nums.remove(n[i+1])
-                tmp_nums.remove(n[i+2])
-                list_nums.append(tuple(tmp_nums))
-                print('Adding2 {}'.format(tmp_nums))
-                p_cnt += 1
-
-        i += 1
 
     print('Part2: {}'.format(list_nums))
     print('Part2: {}'.format(len(set(list_nums))))
 
+
+# slow 
+def def find_p(n):
+    if n == 1:
+        return 1
+    elif n == 2:
+        return 1
+    elif n == 3:
+        return 2
+    else:
+        return find_p(n - 1) + find_p(n - 2) + find_p(n - 3)
+
+
+# quick
+def find_p_no_recursive(n):
+    list1 = [1,1,2,4]
+    while (n != len(list1)):
+        list1.append(list1[-1]+list1[-2]+list1[-3])
+    print(list1)
+
+    return list1[-1]
 
 
 def get_one_and_three_jolts(nums):
@@ -78,12 +73,13 @@ def part1(nums):
 
 
 def main():
-    nums = get_nums_from_file('d10.txt')
-    # nums = get_nums_from_file('da10.txt')
+    # nums = get_nums_from_file('d10.txt')
+    nums = get_nums_from_file('da10.txt')
     # nums = get_nums_from_file('day10.txt')
-
+    nums.insert(0, 0)
     part1(nums)
     part2(nums)
+
 
 if __name__ == '__main__':
     main()
