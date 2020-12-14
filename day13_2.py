@@ -11,66 +11,83 @@ def get_schedule(input_f):
     return bus_list
 
 
-def match_any_bus_dep_time(first_bus, big_bus, dict_bus):
-    timestamp = 0 
-    print('big bus {} start from {}'.format(big_bus, timestamp))
+def find_ts(dict_bus):
+    l_bus = sorted(dict_bus.keys(), reverse=True)
+    print('After sort, bus list {}'.format(l_bus))
+
+    ts = 0
+    num = 0
+    mod = 0
+    next_num = 0
+    next_mod = 0
+    for d in range(len(l_bus) - 1):
+        print('D ----- {}'.format(d))
+        bus = l_bus[d]
+        next_bus = l_bus[d + 1]
+        next_num = dict_bus[next_bus]
+        if d == 0:
+            num = dict_bus[bus]
+            mod = bus
+        else:
+            num = ts
+            mod = lcm(bus, mod)
+
+        ts = get_ts_by_pair(num, mod, next_num, next_bus)
+
+    return ts
+
+
+def get_ts_by_pair(num, mod, next_num, next_mod):
+    print('num {}, mod {}, next num {}, next mod {}'.format(num, mod, next_num, next_mod))
+    ts = 0
+    m = 0
     while True:
-        timestamp += big_bus 
-        if first_bus != big_bus:
-            first_bus_ts = timestamp - dict_bus[big_bus]
-        else:
-            first_bus_ts = timestamp
+        ts = mod * m + num
+        if ts % next_mod == next_num:
+            break
+        m += 1
 
-        if count_true(first_bus, first_bus_ts, dict_bus):
-           break
-
-    print('time: {}'.format(timestamp))
-    return first_bus_ts 
+    return ts
 
 
-def count_true(first_bus, timestamp, dict_bus):
-    if timestamp % first_bus != 0:
-        return False
- 
-    cnt = len(dict_bus)
-    true_cnt = 0
-    for k, v in dict_bus.items():
-        if (timestamp + v) % k == 0:
-            true_cnt += 1
-        else:
-            print('TS {} not match bus {}'.format(timestamp, k))
-            return False
+def lcm(n1, n2):
+    z = n1 if n1 > n2 else n2
 
-    if len(dict_bus) == true_cnt:
-        return True
-    else:
-        return False
+    while z % n1 != 0 or z % n2 != 0:
+        z += 1
+    return z
    
     
 def main():
-    # b_list = get_schedule('day13.txt')
+    b_list = get_schedule('day13.txt')
     # b_list = get_schedule('d13.txt')
     # b_list = ['17','x','13','19']
-    # b_list = ['1789','37','47','1889']
+    #b_list = ['1789','37','47','1889']
     # b_list = ['67','7','x','59','61']
-    b_list = ['67','x','7','59','61']
+    # b_list = ['67','x','7','59','61']
     print(b_list)
-    # get all D for all bus:
-    first_bus = int(b_list[0])
-    big_bus = first_bus 
+
     dict_bus = dict()
+
     for d in range(len(b_list)):
+        print('Bus d {} -----'.format(d))
         bus_str = b_list[d]
-        if d > 0 and bus_str != 'x': 
+        if bus_str != 'x': 
             bus = int(bus_str)
-            if bus > big_bus:
-                big_bus = bus
-            dict_bus[int(bus_str)] = d 
+            if d == 0:
+                dict_bus[bus] = 0 
+            else:
+                diff = bus - d 
+                if diff > 0: 
+                   dict_bus[bus] = bus - d 
+                else:
+                   dict_bus[bus] = diff % bus 
 
-    print('big_bus {}'.format(big_bus))
-    tsp = match_any_bus_dep_time(first_bus, big_bus, dict_bus)
+    print('dict is {}'.format(dict_bus))
 
-    print('Part two: {}'.format(tsp))
+    ts = find_ts(dict_bus)
+
+    print('Part two: {}'.format(ts))
 
 
 if __name__ == '__main__':
