@@ -1,4 +1,30 @@
 import re
+from math import sqrt
+from itertools import count, islice
+
+
+def is_prime(n):
+    return n > 1 and all(n % i for i in islice(count(2), int(sqrt(n)-1)))
+
+
+def lcm(n1, n2):
+    if n1 > n2:
+        z = n1
+        s = n2
+    else:
+        z = n2
+        s = n1
+
+    if z % s == 0:
+        return z
+
+    if is_prime(s):
+        return z * s
+
+    while z % n1 != 0 or z % n2 != 0:
+        print('while in lcm ...')
+        z += 1
+    return z
 
 
 def get_schedule(input_f):
@@ -50,14 +76,6 @@ def get_ts_by_pair(num, mod, next_num, next_mod):
     return ts
 
 
-def lcm(n1, n2):
-    z = n1 if n1 > n2 else n2
-
-    while z % n1 != 0 or z % n2 != 0:
-        z += 1
-    return z
-   
-    
 def main():
     b_list = get_schedule('day13.txt')
     # b_list = get_schedule('d13.txt')
