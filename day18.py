@@ -31,6 +31,7 @@ def cal_inside_p(line):
         in_order_out = cal_first(in_order_in)
         line = line.replace(in_order_in, in_order_out)
         line = line.replace('(' + in_order_out + ')', in_order_out)
+    print('{}'.format(line))
     return line
 
 
@@ -68,7 +69,7 @@ def cal_first(line):
 
 
 def main():
-    line = '1 + 2 * 3 + 4 * 5 + 6'
+    line = '3 * 4 + (9 + (4 * 9 * 9 + 6 * 2) + 4 * 9 + 2) * 3'
     print('{}'.format(int(remove_p(line))))
     # cal_all('day18.txt')
 

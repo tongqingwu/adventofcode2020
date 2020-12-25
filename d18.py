@@ -1,13 +1,20 @@
 import sys
 
 def solution(filename):
-    f = open("./inputs/" + filename, 'r')
+    f = open("day18.txt", 'r')
     f = f.read().split("\n")
 
     ans = 0
+    cnt = 0
     for row in f:
-        ans += interpreter(parser(row))
+        cnt += 1
+#        print('row>{}<'.format(row))
+        if len(row) > 0:
+            r = interpreter(parser(row))
+            print('row {} sum {} row >{}<'.format(cnt, r, row))
+            ans += r 
 
+    print(ans)
     return ans
 
 def find_bound(line):
