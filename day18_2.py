@@ -43,45 +43,56 @@ def cal_inside_p(line):
     return line
 
 
-def cal_first(line):
-    m = re.search(r'^(\d+)(\D)(\d+)', line)
-    n = re.search(r'^(\d+)(\D)(\d+)(\D.+)', line)
-    ot = ''
-    if n:
-        n1 = n.group(1)
-        op = n.group(2)
+def cal_plus_first(line):
+    m = re.search(r'^(\d+)\+(\d+)$', line)
+    mm = re.search(r'^(\d+)\+(\d+)(\D.+)$', line)
+    n = re.search(r'^([0-9*]*\*)(\d+)\+(\d+)$', line)
+    nn = re.search(r'^([0-9*]*\*)(\d+)\+(\d+)(\D.+)$', line)
+    mu = re.search(r'^(\d+)\*(\d+)$', line)
+    muu = re.search(r'^(\d+)\*(\d+)(\*([0-9*]*))$', line)
+
+    if mm:
+        n1 = mm.group(1)
+        n2 = mm.group(2)
+        return str(int(n1) + int(n2)) + mm.group(3)
+    elif nn:
+        n1 = nn.group(2)
+        n2 = nn.group(3)
+        return nn.group(1) + str(int(n1) + int(n2)) + nn.group(4)
+    elif n:
+        n1 = n.group(2)
         n2 = n.group(3)
-        ot = n.group(4)
+        return n.group(1) + str(int(n1) + int(n2))
     elif m:
         n1 = m.group(1)
-        op = m.group(2)
-        n2 = m.group(3)
+        n2 = m.group(2)
+        return str(int(n1) + int(n2))
+    elif muu:
+        n1 = muu.group(1)
+        n2 = muu.group(2)
+        return str(int(n1) * int(n2)) + muu.group(3)
+    elif mu:
+        n1 = mu.group(1)
+        n2 = mu.group(2)
+        return str(int(n1) * int(n2))
     else:
-        print('!!!! no match !!!!')
-
-    if op == MULT:
-        first = int(n1) * int(n2)
-    elif op == PLUS:
-        first = int(n1) + int(n2)
-
-    line = str(first) + ot
-
+        print('!!!! no match !
+        
     return line
 
 
 def cal_in_order(line):
-    line = cal_first(line)
+    line = cal_plus_first(line)
     while re.search(r'^(\d+)([*+])(\d+)', line):
-        line = cal_first(line)
+        line = cal_plus_first(line)
     return line
 
 
 def main():
-    # line = '2*9+3*((3*7*4*3+3*8)*(8+6+3*8+6)+5+3+7+5)+9*(3+3+6+4)'
+    # line = '6*((4*8+4)+(3*5+3+3*7*5))+7+(9*(6+9*7+2*6*6))+2'
     # print('{}'.format(int(remove_p(line))))
     cal_all('day18.txt')
 
 
 if __name__ == '__main__':
     main()
-    # todo: how to debug when all examples passed?
